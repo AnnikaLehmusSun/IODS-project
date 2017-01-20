@@ -1,4 +1,20 @@
 
+---
+title: "IODS course project"
+author: "Annika Lehmus-Sun"
+output:
+  html_document:
+    theme: yeti
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    fig_width: 6
+    fig_height: 4
+    code_folding: hide
+---
 
-## Open Data Course 
-# The aim of the Open Data course is to answer the questions of new kind of open data that we have all around us. It will give one tools to work with the great amount of open data that is available - to help one to analyze and play with the data. https://github.com/AnnikaLehmusSun/IODS-project  
+# Welcome to my course diary!
+## Cheers, Annika
+
+
+# About the Open Data Course: The aim of the Open Data course is to answer the questions of new kind of open data that we have all around us. It will give one tools to work with the great amount of open data that is available - to help one to analyze and play with the data. https://github.com/AnnikaLehmusSun/IODS-project  
