@@ -1,9 +1,9 @@
 ---
 title: "IODS course project"
-author: "Annika Lehmus-Sun" 
+author: "Annika Lehmus-Sun"
 output:
   html_document:
-    theme: cosmo
+    theme: yeti
     toc: true
     toc_depth: 2
     fig_caption: true
@@ -11,6 +11,10 @@ output:
     fig_height: 4
     code_folding: hide
 ---
+
+---
+# Welcome to my Course Diary! 
+# Cheers, Annika
 
 ***
   
