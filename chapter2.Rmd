@@ -1,7 +1,102 @@
-# Insert chapter 2 title here
+# Regression and model validation (chapter 2)
 
-*Describe the work you have done this week and summarize your learning.*
+```{r, echo= FALSE}
+learning2014 <- read.csv(file = "/Applications/IODS-project/data/learn2014.csv", sep = "," , header = TRUE, fill = TRUE, quote = "\"", dec = ".")
+learning2014$X <- NULL
+```
 
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+####The data "learning2014" contains information about students' achievements and learning approaches. The study was done in an Introductory Statistics Course in Finland in 2014, mainly from students of social sciences, from two different courses (part 1 and part 2). This data, learning2014, is from the second part, and it contains altogether 180 respondents, which over 2/3 are women and mean age is 25. The learning approaches are divided in three categories. (1) deep: seekinh meaning, relating ideas, use of evidence; (2) surface: lack of purpose, unrelated memorizing, Syllabus-boundess; (3) and strategic: organized studying, time managment. (Vehkalahti, 2015.) Below you can find the structure and dimensions of the dataset. The data contains 166 observations and seven variables: age, attitude towards statistics, gender, learning aprroaches times three (deep = deep, surface = surf and strategic = stra) and students' ecxam points. 
+
+```{r, echo= FALSE}
+str(learning2014)
+dim(learning2014)
+```
+
+####Next I will present a graphical overview of the dataset "learning2014". The graph below gives hints of correlations between variables. According to the graph, it seems that there are rather little correlations between the learning approaches, gender and age with the exam points. Contrary, the strongest correlation is with the atttitude and points. 
+
+```{r, echo= FALSE}
+library(GGally)
+library(ggplot2)
+p <- ggpairs(learning2014, mapping = aes(col=gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
+```
+
+####Based on the graphical overview of the data, it seems that attitude correlates greatly with points. Let's take a closer look of all the variables:
+
+####gender: The data is based on information from 110 female and 56 male students.
+```{r, echo= FALSE}
+summary(learning2014$gender)
+```
+####age: the youngest respondents is 17-year-old, and oldest 55-year-old, mean age being 25,5-year-old.
+```{r, echo= FALSE}
+summary(learning2014$Age) 
+```
+####attitude towards statistics: the attitude is shown in likert-scale 1-5. Amond the students the lowest attitude values was 1.4 and highest 5. 
+```{r, echo= FALSE}
+learning2014$attitude <- learning2014$Attitude / 10
+summary(learning2014$attitude)
+```
+####Learning approaches (deep, strategic and surface) are each measusered in likert-scale 1-5:
+(1) deep learning approach: the lowest values given is 1.6 and the highest 4.9. Mean is 3.7. Altogether 157/166 respodents.
+```{r, echo= FALSE}
+summary(learning2014$deep)
+```
+####(2) strategic learning approach: the lowest value given is 1.2 and the highest 5.0. Mean is 3.1. Altohether 161/166 respodents.
+```{r, echo= FALSE}
+summary(learning2014$stra)
+```
+####(3) surface learning approach: the lowest value given is 1.6 and the highest 4.3. Mean is 2.8. Altogether 157/166 respodents.
+```{r, echo= FALSE}
+summary(learning2014$surf)
+```
+####Of all the learning approaches the approach deep seems to get the highest (3.7) median value, and the approach surface the lowest (2.8).
+####exam points: the lowest amount is 7 and the highest 33 points. Median value is approximately 23. 
+```{r, echo= FALSE}
+summary(learning2014$Points)
+```
+####Let's take a look at the relationship graphically: attitude indeed seems to have certain correlations with the points, unlike  learning approach (deep). Surprinsingly the age and learning approach surface seems to have a small correlation among the male (and slightly with female) students. The older the student is the less he is likely to use learning approach "surface". Similar correlation did not happen with other two learning approaches (deep and strategic).  
+```{r, echo=FALSE}
+library(ggplot2)
+p1 <- ggplot(learning2014, aes(x = learning2014$Attitude, y = learning2014$Points, col = learning2014$gender))
+p2 <- p1 + geom_point()
+p3 <- p2 + geom_smooth(method = "lm")
+p4 <- p3 + ggtitle("Student's attitude versus exam points")
+print(p4)
+p5 <- ggplot(learning2014, aes(x = surf, y = Age, col = gender))
+p6 <- p5 + geom_point()
+p7 <- p6 + geom_smooth(method = "lm")
+p8 <- p7 + ggtitle("Student's learning approach (surface) versus age")
+p8
+```
+
+# Regression analysis: relationship of attitude, deep learning approach, age, and exam points as a dependent
+####Regression model and analysis is probably one of hte most used method for predicting correlations between variables - to understand how certain independent variables (in my model that is attitude, deep learning approach and age) are related to the dependent variable (that is in this model examp points). Regression analysis helps to investigate different dimensions of the relationship and correlations. However, it is good to keep in mind that correlation does not (always) mean causality. (Armstrong, 2012.) The model1 (below) shows the correlations of the  independent variable and dependent variable.
+
+```{r, echo=FALSE}
+library(GGally)
+library(ggplot2)
+model1 <- lm(Points ~ Attitude + deep + Age, data = learning2014)
+summary(model1)
+```
+####No other variables (i.e. any learning approaches, age nor gender) have statisctical signifance with the students' exam points other than attitude. Thus, since there is no statistical significanse between age and deep learning approach, I will remove those two variables, and create a model2, with only attitude as independent variable and exam point as dependent variable. Although should we ignore the variables that does not have statistical significance, perhaps not. In the articel "Statistical errors. P values, 'the gold standard' of statistical validity, are not as reliable as many scientist assume", Regina Nuzzo summarizes how nowadays P value of 0.01 means for a lot of scientists that there is just a 1% of chance that the result is being a false. However, p value does not tell that. All what P value is doing, is summarizing the data by asuuming a spexifix null hypothesis (=that there is no correaltion between these variables, but our world does not work like that, usually variables do correlate). (Nuzzo, 2014.)
+
+####P value tells us yet something about existing correlation. Therefore, let's take a closer look at regression model "model2", where attitude towards statistics is an independent variable (since it was the only one with a statistical significance) and exam points a dependent variable:
+
+```{r, recho=FALSE}
+model2 <- lm(Points ~ Attitude, data = learning2014)
+summary(model2)
+```
+
+####According to the model2, we can say that it seems like that, when the students' attitude towards statistics rises also her/his exam point rises. The result is statistically significant (nevertheless, it is good to keep in mind Nuzzo's argument of P value). The multiple R-squared of model2 is 0.19 (19%). R-squared measures how close the data is to the fitted regression line. It is the percentage of the response variable variation i.e. dependent variable, in model2 that is exam points, that is explained by a linear model. (Frost, 2013) Conclusively, attitude variable explains some variation of examp points, not extensively though. 
+
+####Next I will provide following diagnostic plots: (1) Residuals vs Fitted values, (2) Normal QQ-plot and (3) Residuals vs Leverage. Residuals vs fitted values plot tells us how well the model (in this case model2) fits the data, and it could fit better. We find pretty equally spread residuals around horizontal line in Fitted  values- plot, it is a indication that there is not non-linear relationship between exam points and attitude. In comparison, normal QQ-plot shows us if the residuals are normally distributed. According to the Tehroeticial Quonatiles - plot (below) shows how residuals are lined well on the straight dashed line, which means that they are quite normally distributed. The last one, Residual vs leverage plot shows possible influential cases. According to the Levarage -plot shows that there is not influential case(s), you can easily see that all the cases are inside Cook's distance lines (if there was an influential case, it would show in the upper and lower right corner).  
+```{r, echo=FALSE}
+plot(model2, which = c(1,2,5), par(mfrow = c(2,2)))
+```
+
+
+## References: 
+#### Armstrong, J. (2002). Illusion in Regression Analysis. Forthcoming, International Journal of Forecasting. Philadelphia. Available at: http://www.academia.edu/1105970/Illusions_in_Regression_Analysis. Last accessed 29.1.2017
+#### Frost, J. (2013). Regression Analysis: How Do I Interpret R-squared and Assess the Goodness-of-Fit?. The minitab blog. Available at: http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit. Last accessed 29.1.2017.
+#### Nuzzo, R. (2014). Statistical errors. P values, 'the gold standard' of statistical validity, are not as reliable as many scientist assume. Nature. 306. 150-152. 
+#### Vehkalahti, K. (2015). The relationship between learning approaches and students' achievements in an introductory statistics course in Finland. 60th World Statistics Congress, ISI2015. Rio de Janeiro.  
