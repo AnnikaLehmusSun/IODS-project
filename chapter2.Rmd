@@ -1,4 +1,4 @@
-# Regression and model validation (chapter 2)
+# Regression and model validation
 
 ```{r, echo= FALSE}
 learning2014 <- read.csv(file = "/Applications/IODS-project/data/learn2014.csv", sep = "," , header = TRUE, fill = TRUE, quote = "\"", dec = ".")
@@ -69,7 +69,7 @@ p8 <- p7 + ggtitle("Student's learning approach (surface) versus age")
 p8
 ```
 
-## Regression analysis: relationship of attitude, deep learning approach, age, and exam points as a dependent
+### Regression analysis: relationship of attitude, deep learning approach, age, and exam points as a dependent
 ####Regression model and analysis is probably one of hte most used method for predicting correlations between variables - to understand how certain independent variables (in my model that is attitude, deep learning approach and age) are related to the dependent variable (that is in this model examp points). Regression analysis helps to investigate different dimensions of the relationship and correlations. However, it is good to keep in mind that correlation does not (always) mean causality. (Armstrong, 2012.) The model1 (below) shows the correlations of the  independent variable and dependent variable.
 
 ```{r, echo=FALSE}
@@ -95,7 +95,7 @@ plot(model2, which = c(1,2,5), par(mfrow = c(2,2)))
 ```
 
 
-## References: 
+#### References: 
 #### Armstrong, J. (2002). Illusion in Regression Analysis. Forthcoming, International Journal of Forecasting. Philadelphia. Available at: http://www.academia.edu/1105970/Illusions_in_Regression_Analysis. Last accessed 29.1.2017
 #### Frost, J. (2013). Regression Analysis: How Do I Interpret R-squared and Assess the Goodness-of-Fit?. The minitab blog. Available at: http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit. Last accessed 29.1.2017.
 #### Nuzzo, R. (2014). Statistical errors. P values, 'the gold standard' of statistical validity, are not as reliable as many scientist assume. Nature. 306. 150-152. 

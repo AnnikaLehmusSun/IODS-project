@@ -2,7 +2,7 @@
 title: "chapter3.Rmd"
 output: html_document
 ---
-# Logistic Regression (chapter 3)
+# Logistic Regression 
 #### The data that will be used in chapter 3 contains information of students and their alcohol usage. It provides correlation between different factors e.g. gender, age, study time and the use of alcohol. The data has altogether 382 observations and 35 variables, and it has information from both math course students and Portuguese language course students - hence, the data is consisted of two datasets. 
 
 ```{r, echo= FALSE}
@@ -22,7 +22,7 @@ library(ggplot2)
 ```{r, echo=FALSE}
 summary(alc$higher)
 ```
-##Gender and age summaries
+####Gender and age summaries
 ```{r, echo=FALSE}
 summary(alc$sex)
 summary(alc$age)

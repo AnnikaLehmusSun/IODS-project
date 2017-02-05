@@ -13,8 +13,7 @@ output:
 ---
 
 ---
-# Welcome to my Course Diary! 
-# Cheers, Annika
+
 
 ***
   
