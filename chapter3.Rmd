@@ -2,8 +2,8 @@
 title: "chapter3.Rmd"
 output: html_document
 ---
-
-## The data that will be used in chapter 3 contains information of students and their alcohol usage. It provides correlation between different factors e.g. gender, age, study time and the use of alcohol. The data has altogether 382 observations and 35 variables, and it has information from both math course students and Portuguese language course students - hence, the data is consisted of two datasets. 
+# Logistic Regression (chapter 3)
+#### The data that will be used in chapter 3 contains information of students and their alcohol usage. It provides correlation between different factors e.g. gender, age, study time and the use of alcohol. The data has altogether 382 observations and 35 variables, and it has information from both math course students and Portuguese language course students - hence, the data is consisted of two datasets. 
 
 ```{r, echo= FALSE}
 alc <- read.csv(file = "/Applications/IODS-project/data/alc.csv", sep = "," , header = TRUE, fill = TRUE, quote = "\"", dec = ".")
@@ -16,9 +16,9 @@ library(dplyr)
 library(ggplot2)
 ```
 
-## Next I will analyze the relationship between low alcohol consumption age, sex, whether the student wants to aim higher education (higher) and final grade (G3). The hypothesis  is that the younger the person is, and the higher of the final grade is, the less alcohol the student consumes. Moreover, my hypothesis is that the female students uses less alcohol and if the student aims to receive higher education in future, he/she uses less alcohol. 
+#### Next I will analyze the relationship between low alcohol consumption age, sex, whether the student wants to aim higher education (higher) and final grade (G3). The hypothesis  is that the younger the person is, and the higher of the final grade is, the less alcohol the student consumes. Moreover, my hypothesis is that the female students uses less alcohol and if the student aims to receive higher education in future, he/she uses less alcohol. 
 
-## aims for higher education summary
+#### aims for higher education summary
 ```{r, echo=FALSE}
 summary(alc$higher)
 ```
@@ -27,12 +27,12 @@ summary(alc$higher)
 summary(alc$sex)
 summary(alc$age)
 ```
-## final grade summary
+#### final grade summary
 ```{r, echo=FALSE}
 summary(alc$G3)
 ```
 
-## Below you can see, how variable higher (wants to receive higher education) did not get statstical significance. Nonetheless, it seems that the age, gender and final grade result has a correlation with the student alcohol use. Gender seems to have the highest statistical significance: the older the person is and if the student is a male who received lower final grade, the more likely the student consumes higher amount of alcohol as well. Unlike my hypothesis above, there is no sign that the student aim for higher education has something to do with the alcohol consumption. 
+#### Below you can see, how variable higher (wants to receive higher education) did not get statstical significance. Nonetheless, it seems that the age, gender and final grade result has a correlation with the student alcohol use. Gender seems to have the highest statistical significance: the older the person is and if the student is a male who received lower final grade, the more likely the student consumes higher amount of alcohol as well. Unlike my hypothesis above, there is no sign that the student aim for higher education has something to do with the alcohol consumption. 
 
 ```{r, echo=FALSE}
 library(GGally)
@@ -59,7 +59,7 @@ g3 + geom_boxplot() + ggtitle ("Student age by alcohol consumption and sex")
 ```
 
 
-## Below I have used logistic regression to study the same variables as above (i.e. relationship between alcohol consumption and age, gender, final grade and person's aim for higher education). According to the logistic regression, the results are rather similar than with ordinary regression analysis. Although the confidence intervals shows that there, indeed, seem to be a strong correlation with the person's gender and higher alcohol use (which is also agreeing with the hypothesis). 
+#### Below I have used logistic regression to study the same variables as above (i.e. relationship between alcohol consumption and age, gender, final grade and person's aim for higher education). According to the logistic regression, the results are rather similar than with ordinary regression analysis. Although the confidence intervals shows that there, indeed, seem to be a strong correlation with the person's gender and higher alcohol use (which is also agreeing with the hypothesis). 
 
 ```{r, echo=FALSE}
 lm1 <- glm(high_use ~ higher + age + sex + G3, data = alc, family = "binomial")
@@ -76,7 +76,7 @@ cbind(OR, CI)
 ```
 
 
-## Next I will use only the variable, that according to my logistic regression model had a statistical relationship with high alcohol consumption, those were age, final grade and gender, and by using these variables I provide cross tabulation of predictions versus actual values - as you can see the graph belowe, the prediction valua of the model is rather good. 
+#### Next I will use only the variable, that according to my logistic regression model had a statistical relationship with high alcohol consumption, those were age, final grade and gender, and by using these variables I provide cross tabulation of predictions versus actual values - as you can see the graph belowe, the prediction valua of the model is rather good. 
 
 ```{r, echo=FALSE}
 lm2 <- glm(high_use ~  age + G3 + sex, data = alc, family = "binomial")

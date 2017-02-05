@@ -69,7 +69,7 @@ p8 <- p7 + ggtitle("Student's learning approach (surface) versus age")
 p8
 ```
 
-# Regression analysis: relationship of attitude, deep learning approach, age, and exam points as a dependent
+## Regression analysis: relationship of attitude, deep learning approach, age, and exam points as a dependent
 ####Regression model and analysis is probably one of hte most used method for predicting correlations between variables - to understand how certain independent variables (in my model that is attitude, deep learning approach and age) are related to the dependent variable (that is in this model examp points). Regression analysis helps to investigate different dimensions of the relationship and correlations. However, it is good to keep in mind that correlation does not (always) mean causality. (Armstrong, 2012.) The model1 (below) shows the correlations of the  independent variable and dependent variable.
 
 ```{r, echo=FALSE}
