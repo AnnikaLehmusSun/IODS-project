@@ -5,24 +5,66 @@ str(hd)
 dim(hd)
 summary(hd)
 
-
-
-hd$HDI.Rank <- hd$RankHDI
-hd$Human.Development.Index..HDI. <- hd$HDI
-hd$Life.Expectancy.at.Birth <- hd$LifeExp
-hd$Expected.Years.of.Education <- hd$educationExp
-hd$Mean.Years.of.Education <- hd$educationMean
-hd$Gross.National.Income..GNI..per.Capita <- hd$GNI
-hd$GNI.per.Capita.Rank.Minus.HDI.Rank <- hd$GNIandHDI
+hd$HDIrank <- hd$HDI.Rank
+hd$HDI.Rank <- NULL
+hd$HDI <- hd$Human.Development.Index..HDI.
+hd$Human.Development.Index..HDI. <- NULL
+hd$lifeExp <- hd$Life.Expectancy.at.Birth 
+hd$Life.Expectancy.at.Birth <- NULL
+hd$educationExp <- hd$Expected.Years.of.Education 
+hd$Expected.Years.of.Education <- NULL
+hd$educationMean <- hd$Mean.Years.of.Education  
+hd$Mean.Years.of.Education <- NULL
+hd$GNI <- hd$Gross.National.Income..GNI..per.Capita 
+hd$Gross.National.Income..GNI..per.Capita <- NULL
+hd$GNIandHDI <- hd$GNI.per.Capita.Rank.Minus.HDI.Rank  
+hd$GNI.per.Capita.Rank.Minus.HDI.Rank <- NULL
+str(hd)
+dim(hd)
 
 str(gii)
 dim(gii)
 summary(gii)
+gii$Giirank <- gii$GII.Rank 
+gii$GII.Rank <- NULL
+gii$GII  <- gii$Gender.Inequality.Index..GII.
+gii$Gender.Inequality.Index..GII. <- NULL
+gii$mortality <- gii$Maternal.Mortality.Ratio 
+gii$Maternal.Mortality.Ratio <- NULL
+gii$birthRate <- gii$Adolescent.Birth.Rate 
+gii$Adolescent.Birth.Rate <- NULL
+gii$repr.parliament <- gii$Percent.Representation.in.Parliament
+gii$Percent.Representation.in.Parliament <- NULL
+gii$labourM <- gii$Labour.Force.Participation.Rate..Male.
+gii$Labour.Force.Participation.Rate..Male. <- NULL
+gii$labourF <- gii$Labour.Force.Participation.Rate..Female.
+gii$Labour.Force.Participation.Rate..Female. <- NULL
+gii$eduM <- gii$Population.with.Secondary.Education..Male.
+gii$Population.with.Secondary.Education..Male. <- NULL
+gii$eduF <- gii$Population.with.Secondary.Education..Female. 
+gii$Population.with.Secondary.Education..Female. <- NULL
+str(gii)
+dim(gii)
 
-#Mutate the “Gender inequality” data and create two new variables. 
-#The first one should be the ratio of Female and Male populations with secondary education in each country. 
-#(i.e. edu2F / edu2M). The second new variable should be the ratio of labour force participation of 
-#females and males in each country (i.e. labF / labM). (1 point)
-#Join together the two datasets using the variable Country as the identifier. Keep only the 
-#countries in both data sets (Hint: inner join). Call the new joined data human and save it in your data folder. (1 point)
+# Education ratio - new variable:
+gii$eduRatio <- with (gii, eduF / eduM)
+summary(gii$eduRatio)
+
+# Labour ratio - new variable:
+gii$labourRatio <- with (gii, labourF/labourM)
+summary(gii$labourRatio)  
+
+library(dplyr)
+
+join_by <- c("Country")
+join_by
+
+# join the two datasets by the selected identifiers
+hd_gii <- inner_join(hd, gii, by = join_by)
+
+colnames(hd_gii)
+
+glimpse(hd_gii)
+
+
 
