@@ -1,3 +1,6 @@
+---
+output: html_document
+---
 # Regression and model validation
 
 ```{r, echo= FALSE}
