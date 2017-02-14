@@ -1,0 +1,104 @@
+# Clustering and classification 
+
+#### The data I will be using in the following assignment is called Boston and it is about the housing values in suburbs of Boston. There are 14 variables of the data are: crim -crime rate; zn - proportion of residential land; indus - proportion of non-retail business acres; chas - Charles River dummy variable (= 1 if tract bounds river; 0 otherwise); nox - nitrogen oxides concentration; rm -average number of rooms per dwelling;age - proportion of owner-occupied units built prior to 1940; dis - weighted mean of distances to five Boston employment centres; rad - index of accessibility to radial highways; tax - full-value property-tax rate per \$10,000; ptratio- pupil-teacher ratio by town; black- 1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town; lstat -lower status of the population (percent); medv - median value of owner-occupied homes in \$1000s. Below you can see the structure and dimensions of the data.
+
+```{r}
+library(MASS)
+data("Boston")
+str(Boston)
+dim(Boston)
+```
+
+#### Below you can see the graphical overview of the data Boston and the summaries of the variables. The correlation plot indicates that criminal rates has somewhat small correlation median value of owner-occupied homes in \$1000s and the proportion of blacks by town. The biggest correlations are between proportion of non-retail business acres per town and weighted mean of distances to five Boston employment centres, but also between lower status of the population (percent) and median value of owner-occupied homes in \$1000s.
+
+```{r}
+summary(Boston)
+pairs(Boston)
+library(tidyverse)
+install.packages("corrplot")
+library(corrplot)
+cor_matrix<-cor(Boston) %>% round(2)
+print(cor_matrix)
+plot(cor_matrix)
+corrplot(cor_matrix, method="circle", type = "upper", cl.pos ="b", tl.ps = "d", tl.cex = 0.6)
+
+```
+
+#### Below I scaled the Boston dataset for standardize purposes. As you can see from the summary of scaled data variables have now, when scaled, higher values. I created a categorical variables of crime rate from the scaled crime rate.
+
+```{r}
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+class(boston_scaled)
+boston_scaled <- as.data.frame(boston_scaled)
+scaled_crim <- boston_scaled$crim
+summary(scaled_crim)
+
+bins <- quantile(scaled_crim)
+bins
+crime <- cut(scaled_crim, breaks = bins, include.lowest = TRUE, labels = c("low", "med_low", "med_high", "high"))
+table(crime)
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+boston_scaled <- data.frame(boston_scaled, crime)
+```
+
+#### I split the original data to test and train sets so that allowed me to check how well the model actually work. The train set is for the training of the model and the test set is for predicting the new data. Below you can see the LDA plot that has crime rate as the target variable and all the other variables of the boston scaled dataset as predictor variables. 
+
+
+```{r}
+
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+
+lda.fit <- lda(crime ~ ., data = train)
+lda.fit
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+
+classes <- as.numeric(train$crime)
+
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 2)
+
+```
+
+#### On below you can see a cross-table of the results of LDA prediction - as you can see the model does not predicts rather well the crime rates with the new data. 
+
+```{r}
+correct_classes <- test$crime
+
+test <- dplyr::select(test, -crime)
+
+lda.pred <- predict(lda.fit, newdata = test)
+
+table(correct = correct_classes, predicted = lda.pred$class)
+
+```
+
+#### I reloaded and standardized the original Boston dataset, calculated the distances between the obsevations (below) and ran k-mean algorithn on the dataset. For me, optimal number of clusters are 7. There are seven sensible clusters, groups if you like, for this dataset. 
+
+```{r}
+library(MASS)
+data('Boston')
+summary(Boston)
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+boston_scaled <- as.data.frame(boston_scaled)
+dist_eu <- dist(boston_scaled)
+summary(dist_eu)
+
+km <-kmeans(dist_eu, centers = 7)
+
+pairs(boston_scaled, col = km$cluster)
+
+
+```
+
