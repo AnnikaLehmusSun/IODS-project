@@ -5,7 +5,7 @@ output: html_document
 
 #Dimensionality reduction techniques 
 
-####The data "human" is a dataset that contains two data:"human development" and "gender inequality" datas. More information about the data you can find from [here] (http://hdr.undp.org/en/content/human-development-index-hdi), below you can find the structure and dimesions of the data. 
+####The data "human" is a dataset that contains two data:"human development" and "gender inequality" datas. More information about the data you can find from: http://hdr.undp.org/en/content/human-development-index-hdi. Below you can find the structure and dimesions of the data. 
 ####Altogether human data has 155 observation and 9 variables, which are following: 
 ######Country = country where the data has been collected
 ######lifeExp = Life expectancy at birth
