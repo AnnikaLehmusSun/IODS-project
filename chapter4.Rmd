@@ -6,14 +6,35 @@ output: html_document
 #### The data I will be using in the following assignment is called Boston and it is about the housing values in suburbs of Boston. There are 14 variables of the data are: crim -crime rate; zn - proportion of residential land; indus - proportion of non-retail business acres; chas - Charles River dummy variable (= 1 if tract bounds river; 0 otherwise); nox - nitrogen oxides concentration; rm -average number of rooms per dwelling;age - proportion of owner-occupied units built prior to 1940; dis - weighted mean of distances to five Boston employment centres; rad - index of accessibility to radial highways; tax - full-value property-tax rate per \$10,000; ptratio- pupil-teacher ratio by town; black- 1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town; lstat -lower status of the population (percent); medv - median value of owner-occupied homes in \$1000s. Below you can see the structure and dimensions of the data.
 
 ```{r}
-library(MASS)
-data("Boston")
-library(ggplot2)
-library(corrplot)
-library(tidyverse)
+if (!require("tidyverse")) {
+  install.packages("tidyverse", repos="http://cran.rstudio.com/") 
+  library("tidyverse")
+}
+if (!require("corrplot")) {
+  install.packages("corrplot", repos="http://cran.rstudio.com/") 
+  library("corrplot")
+}
+if (!require("ggplot2")) {
+  install.packages("ggplot2", repos="http://cran.rstudio.com/") 
+  library("ggplot2")
+}
+if (!require("MASS")) {
+  install.packages("MASS", repos="http://cran.rstudio.com/") 
+  library("MASS")
+}
+if (!require("dplyr")) {
+  install.packages("dplyr", repos="http://cran.rstudio.com/") 
+  library("dlpyr")
+}
+if (!require("GGally")) {
+  install.packages("GGally", repos="http://cran.rstudio.com/") 
+  library("GGally")
+}
+library(psych)
+library(tidyr)
 
 
-str(Boston)
+describe(Boston)
 dim(Boston)
 ```
 
@@ -88,10 +109,9 @@ table(correct = correct_classes, predicted = lda.pred$class)
 
 ```
 
-#### I reloaded and standardized the original Boston dataset, calculated the distances between the obsevations (below) and ran k-mean algorithn on the dataset. For me, optimal number of clusters are 7. There are seven sensible clusters, groups if you like, for this dataset. 
+#### I reloaded and standardized the original Boston dataset, calculated the distances between the obsevations (below) and ran k-mean algorithn on the dataset. For me, optimal number of clusters are 7. There are seven sensible clusters, groups, for this dataset. 
 
 ```{r}
-library(MASS)
 data('Boston')
 summary(Boston)
 boston_scaled <- scale(Boston)
@@ -106,4 +126,6 @@ pairs(boston_scaled, col = km$cluster)
 
 
 ```
+
+
 

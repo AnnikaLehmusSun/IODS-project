@@ -1,0 +1,116 @@
+---
+output: html_document
+---
+
+
+#Dimensionality reduction techniques 
+
+####The data "human" is a dataset that contains two data:"human development" and "gender inequality" datas. More information about the data you can find from [here] (http://hdr.undp.org/en/content/human-development-index-hdi), below you can find the structure and dimesions of the data. 
+####Altogether human data has 155 observation and 9 variables, which are following: 
+######Country = country where the data has been collected
+######lifeExp = Life expectancy at birth
+######GNI = Gross National Income per capita
+######educationExp = Expected years of schooling 
+######mortality = Maternal mortality ratio
+######repr.parliament = Percetange of female representatives in parliament
+######eduRatio = the ratio of Female and Male populations with secondary education in each country
+######labourRatio = the ratio of labour force participation of females and males in each country
+######birthRate = Adolescent birth rate
+
+```{r, chapter 5}
+human <- read.csv(file = "/Applications/IODS-project/data/human1.csv", sep =",", header =TRUE)
+
+human$X <- NULL
+dim(human)
+describe(human)
+
+```
+
+####Below you can see the summaries of the variables in the "human" data. Additionally, there is a graphical overview of the data. According to the pairs, there are some correlations between variables, e.g. positive correlation between life expectancy and education expectancy, and negative education expectaion and birth rate. 
+
+```{r, echo=FALSE}
+summary(human)
+boxplot(human, par(cex.lab=1),par(cex.axis=0.6))
+pairs(human)
+```
+
+
+#### In order to explore the variables and their relationship more closely, I removed the GIN and country - variables. As above, also the graphical overview below support my earlier observation: positive correlation between life expectancy and education expectancy, similarly with birth rate and mortality. 
+
+
+```{r}
+require(MASS)
+require(dplyr)
+keep <- c("lifeExp", "educationExp", "birthRate", "mortality","repr.parliament", "eduRatio", "labourRatio")
+human <- dplyr::select(human, one_of(keep))
+```
+
+```{r}
+p <- ggpairs(human, mapping = aes(alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
+cor_matrix <- cor(human) 
+corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex=0.6)
+
+cor(human) %>%
+corrplot()
+```
+
+####Next I perform princial component analysis with the normal human data. As you can see from the graph below, it is a bit challenging to make observations from it. Let's try with scaled human data next! 
+
+```{r}
+pca_human <- prcomp(human)
+biplot(pca_human, choices = 1:2, cex =c(0.5, 1), col = c("black", "yellow1"))
+```
+
+####Now, let's try with the standarized variables in the human data and perform PCA again. The graph is much better, and one can observe more clearly the correlation with variables. In the graph above done with the data that has not been scaled, shows that all the variables are in the same cluster. In contrast, the graph below done with the data that has been scaled more scatterness between variables. It shows correlations between the ratio of labour force participation of females and males in each country and percetange of female representatives in parliament, and Maternal mortality and child birth rate, and correlation between the ratio of Female and Male populations with secondary education in each country, expected years of schooling and life expectancy at birth.
+
+
+```{r}
+human_std <- scale(human)
+pca_human <- prcomp(human_std)
+biplot(pca_human, choices = 1:2, cex =c(0.5, 0.7), col = c("blue3", "deeppink2"), main= "Impact of inequality in human development")
+
+summary(human)
+summary(human_std)
+```
+
+####The first two principal component dimensions (PC1 and PC2) interprets that correlation between the ratio of labour force participation of females and males in each country and percetange of female representatives in parliament is rather strong, stronger than PC2, which is the correlation between the ratio of Female and Male populations with secondary education in each country, expected years of schooling and life expectancy at birth.
+
+```{r, echo=FALSE}
+s <- summary(pca_human)
+pca_pr <- round(100*s$importance[2, ], digits = 1) 
+print(pca_pr)
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+
+biplot(pca_human, cex = c(0.8, 1), col = c("black", "yellow1"), xlab = pc_lab[1], ylab = pc_lab[2])
+```
+
+
+####Lastly, I will take a look at the "tea" dataset from the package FactoMineR. Below you can see the structure and dimensions of the dataset. Altogether it has 300 observations and 36 variables. Since the 36 variables was a bit too much, I decided to use only few variables for the MC-analysis. The MCA graph indicates that people who use tea shops to purchase their tea, also drink loose leaf tea. In contrast, people who drink Earl grey -tea, use tea with milk and sugar and outside lunch hours. Naturally, also the tea drinkers who purchase their tea from both normal store and tea shops, also use both tea bags and loose leaf tea. 
+
+
+
+```{r, echo=FALSE}
+library(FactoMineR)
+data("tea")
+
+dim(tea)
+describe(tea)
+
+gather(tea) %>% ggplot(aes(value)) +  geom_bar() + facet_wrap("key", scales = "free")  + theme(axis.text.x = element_text(angle =45, hjust = 1, size = 8))
+
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+
+tea_time <- dplyr::select(tea, one_of(keep_columns))
+
+str(tea_time)
+describe(tea_time)
+
+gather(tea_time) %>% ggplot(aes(value)) +  geom_bar() + facet_wrap("key", scales = "free")  + theme(axis.text.x = element_text(angle =45, hjust = 1, size = 8))
+
+mca <- MCA(tea_time, graph = FALSE)
+
+summary(mca)
+plot(mca, invisible=c("ind"), habillage = "quali")
+
+```

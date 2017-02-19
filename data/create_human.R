@@ -1,3 +1,4 @@
+# PART 1
 hd <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human_development.csv", stringsAsFactors = F)
 gii <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/gender_inequality.csv", stringsAsFactors = F, na.strings = "..")
 
@@ -66,5 +67,40 @@ colnames(hd_gii)
 
 glimpse(hd_gii)
 
+str(hd_gii)
 
+# PART 2
+library(stringr)
+
+str(hd_gii$GNI)
+str(hd_gii$Country)
+
+# converting GNI variable to numeric
+str_replace(hd_gii$GNI, pattern=",", replace ="") %>% as.numeric
+variable.names(hd_gii)
+
+#Keeping only the following variables
+keep <- c("Country", "lifeExp", "GNI", "educationExp", "birthRate", "mortality","repr.parliament", "eduRatio", "labourRatio")
+hd_gii <- select(hd_gii, one_of(keep))
+
+#Removing NAs 
+complete.cases(hd_gii)
+data.frame(hd_gii[-1], comp = complete.cases(hd_gii))
+human <- filter(hd_gii, TRUE, complete.cases(hd_gii))
+
+#Removing all the regional observations (instead of countries)
+tail(human, n=10)
+last <- nrow(human) - 7
+human <- human[1:last,]
+
+#Changing the row names of the data by the country 
+rownames(human) <- human$Country
+human$Country
+str(human)
+
+
+
+write.csv(human1, file = "/Applications/IODS-project/data/human1.csv")
+human2 <- read.csv(file = "/Applications/IODS-project/data/human1.csv", sep =",", header =TRUE)
+human2
 
